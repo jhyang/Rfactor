@@ -78,11 +78,28 @@ dt.fluke <- dt.fluke[dt.fluke$rowSums > 0,]
 dt.trayvon <- dt.trayvon[dt.trayvon$rowSums > 0,]
 
 ## get total of hashtags used by user
-#kony.total <- rowSums(dt.kony)
-#fluke.total <- rowSums(dt.fluke)
-#trayvon.total <- rowSums(dt.trayvon)
+kony.total <- dt.kony$rowSums
+fluke.total <- dt.fluke$rowSums
+trayvon.total <- dt.trayvon$rowSums
 
 ## normalize by user totals
-#dt.kony <- dt.kony / kony.total
-#dt.fluke <- dt.fluke / fluke.total
-#dt.trayvon <- dt.trayvon / trayvon.total
+dt.kony.norm <- dt.kony / kony.total
+dt.fluke.norm <- dt.fluke / fluke.total
+dt.trayvon.norm <- dt.trayvon / trayvon.total
+
+## convert data format for factor analysis
+# count data
+dt.kony$user.id <- NULL
+dt.kony$rowSums <- NULL
+dt.fluke$user.id <- NULL
+dt.fluke$rowSums <- NULL
+dt.trayvon$user.id <- NULL
+dt.trayvon$rowSums <- NULL
+
+# normalized data
+dt.kony.norm$user.id <- NULL
+dt.kony.norm$rowSums <- NULL
+dt.fluke.norm$user.id <- NULL
+dt.fluke.norm$rowSums <- NULL
+dt.trayvon.norm$user.id <- NULL
+dt.trayvon.norm$rowSums <- NULL
