@@ -184,11 +184,54 @@ det(cor(dt.kony)) # .017
 det(cor(dt.fluke)) # .084
 det(cor(dt.trayvon)) # .011
 
-## PCA
-pca.kony <- principal (dt.kony, nfactors=3, rotate="none")
+## PCA (unrotated)
+pca.kony <- principal (dt.kony, nfactors=2, rotate="none")
 plot(pca.kony$values, type="b")
-pca.fluke <- principal (dt.fluke, nfactors=3, rotate="none")
+factor.model(pca.kony$loadings)
+pca.fluke <- principal (dt.fluke, nfactors=2, rotate="none")
 plot(pca.fluke$values, type="b")
-pca.trayvon <- principal (dt.trayvon, nfactors=3, rotate="none")
+factor.model(pca.fluke$loadings)
+pca.trayvon <- principal (dt.trayvon, nfactors=2, rotate="none")
 plot(pca.trayvon$values, type="b")
+factor.model(pca.trayvon$loadings)
 
+## PCA (orthogonal rotation: varimax)
+pca.kony.v <- principal (dt.kony, nfactors=2, rotate="varimax")
+pca.kony.v
+plot(pca.kony.v$values, type="b")
+factor.model(pca.kony.v$loadings)
+print.psych(pca.kony.v, cut=0.3, sort=TRUE)
+pca.fluke.v <- principal (dt.fluke, nfactors=3, rotate="varimax")
+pca.fluke.v
+plot(pca.fluke.v$values, type="b")
+factor.model(pca.fluke.v$loadings)
+print.psych(pca.fluke.v, cut=0.3, sort=TRUE)
+pca.trayvon.v <- principal (dt.trayvon, nfactors=2, rotate="varimax")
+pca.trayvon.v
+plot(pca.trayvon.v$values, type="b")
+factor.model(pca.trayvon.v$loadings)
+print.psych(pca.trayvon.v, cut=0.3, sort=TRUE)
+
+## PCA (oblique rotation: oblimin)
+pca.kony.o <- principal (dt.kony, nfactors=3, rotate="oblimin")
+pca.kony.o
+plot(pca.kony.o$values, type="b")
+factor.model(pca.kony.o$loadings)
+print.psych(pca.kony.o, cut=0.3, sort=TRUE)
+pca.fluke.o <- principal (dt.fluke, nfactors=3, rotate="oblimin")
+pca.fluke.o
+plot(pca.fluke.o$values, type="b")
+factor.model(pca.fluke.o$loadings)
+print.psych(pca.fluke.o, cut=0.3, sort=TRUE)
+pca.trayvon.o <- principal (dt.trayvon, nfactors=3, rotate="oblimin")
+pca.trayvon.o
+plot(pca.trayvon.o$values, type="b")
+factor.model(pca.trayvon.o$loadings)
+print.psych(pca.trayvon.o, cut=0.3, sort=TRUE)
+
+###----- CONFIRMATORY FACTOR ANALYSIS -----###
+
+## make covariance matrix
+cov.kony <- cov(dt.kony)
+cov.fluke <- cov(dt.fluke)
+cov.trayvon <- cov(dt.trayvon)
