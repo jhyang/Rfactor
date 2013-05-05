@@ -213,7 +213,7 @@ factor.model(pca.trayvon.v$loadings)
 print.psych(pca.trayvon.v, cut=0.3, sort=TRUE)
 
 ## PCA (oblique rotation: oblimin)
-pca.kony.o <- principal (dt.kony, nfactors=3, rotate="oblimin")
+pca.kony.o <- principal (dt.kony, nfactors=2, rotate="oblimin")
 pca.kony.o
 plot(pca.kony.o$values, type="b")
 factor.model(pca.kony.o$loadings)
@@ -229,9 +229,76 @@ plot(pca.trayvon.o$values, type="b")
 factor.model(pca.trayvon.o$loadings)
 print.psych(pca.trayvon.o, cut=0.3, sort=TRUE)
 
-###----- CONFIRMATORY FACTOR ANALYSIS -----###
+# PCA Variable Factor Map 
+install.packages("FactoMineR"); library(FactoMineR)
+result.pca.kony <- PCA(cov.kony) # graphs generated automatically
+result.pca.fluke <- PCA(cov.kony) # graphs generated automatically
+result.pca. <- PCA(cov.kony) # graphs generated automatically
+
+###----- EXPLANATORY FACTOR ANALYSIS -----###
+## make dataframe using hashtags only (no keywords)
+dt.fa.kony <- dt.kony[ , 2:6]
+dt.fa.fluke <- dt.fluke[ , 2:9]
+dt.fa.trayvon <- dt.trayvon[ , c(1:7, 10)]
 
 ## make covariance matrix
-cov.kony <- cov(dt.kony)
-cov.fluke <- cov(dt.fluke)
-cov.trayvon <- cov(dt.trayvon)
+cov.kony <- cov(dt.fa.kony)
+cov.fluke <- cov(dt.fa.fluke)
+cov.trayvon <- cov(dt.fa.trayvon)
+
+## EFA: Maximum Likelihood Factor Analysis entering raw data and extracting N factors with varimax rotation 
+
+# kony
+fit.kony <- factanal(dt.fa.kony, 2, rotation="varimax")
+print(fit.kony, digits=2, cutoff=.3, sort=TRUE)
+# plot factor 1 by factor 2 
+load.kony <- fit.kony$loadings[,1:2] 
+plot(load.kony,type="n") # set up plot 
+text(load.kony,labels=names(dt.fa.kony),cex=.7) # add variable names
+
+#fluke
+fit.fluke <- factanal(dt.fa.fluke, 3, rotation="varimax")
+print(fit.fluke, digits=2, cutoff=.3, sort=TRUE)
+# plot factor 1 by factor 2 
+load.fluke <- fit.fluke$loadings[,1:2] 
+plot(load.fluke,type="n") # set up plot 
+text(load.fluke,labels=names(dt.fa.fluke),cex=.7) # add variable names
+
+# trayvon
+fit.trayvon <- factanal(dt.fa.trayvon, 3, rotation="varimax")
+print(fit.trayvon, digits=2, cutoff=.3, sort=TRUE)
+# plot factor 1 by factor 2 
+load.trayvon <- fit.trayvon$loadings[,1:2] 
+plot(load.trayvon,type="n") # set up plot 
+text(load.trayvon,labels=names(dt.fa.trayvon),cex=.7) # add variable names
+
+## Determine Number of Factors to Extract
+install.packages("nFactors"); library(nFactors)
+
+# kony
+ev.kony <- eigen(cor(dt.fa.kony)) # get eigenvalues
+ap.kony <- parallel(subject=nrow(dt.fa.kony),var=ncol(dt.fa.kony),
+               rep=100,cent=.05)
+nS.kony <- nScree(ev.kony$values, ap.kony$eigen$qevpea)
+plotnScree(nS.kony)
+
+# fluke
+ev.fluke <- eigen(cor(dt.fa.fluke)) # get eigenvalues
+ap.fluke <- parallel(subject=nrow(dt.fa.fluke),var=ncol(dt.fa.fluke),
+                     rep=100,cent=.05)
+nS.fluke <- nScree(ev.fluke$values, ap.fluke$eigen$qevpea)
+plotnScree(nS.fluke)
+
+# trayvon
+ev.trayvon <- eigen(cor(dt.fa.trayvon)) # get eigenvalues
+ap.trayvon <- parallel(subject=nrow(dt.fa.trayvon),var=ncol(dt.fa.trayvon),
+                       rep=100,cent=.05)
+nS.trayvon <- nScree(ev.trayvon$values, ap.trayvon$eigen$qevpea)
+plotnScree(nS.trayvon)
+
+
+
+
+##### additional information:
+### http://www.statmethods.net/advstats/factor.html
+### http://methodsconsultants.com/tutorial/9/Confirmatory-Factor-Analysis-Using-the-SEM-Package-in-R
